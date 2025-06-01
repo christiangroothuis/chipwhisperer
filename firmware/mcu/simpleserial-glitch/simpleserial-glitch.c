@@ -19,6 +19,7 @@
 #include "hal.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "simpleserial.h"
 
@@ -62,13 +63,29 @@ uint8_t glitch_comparison(uint8_t* in, uint8_t len)
 {
     uint8_t ok = 5;
     trigger_high();
+
+    uint8_t volatile nop = 5;
+
+    while (nop != 0) {
+        nop--;
+    }
+    
     if (*in == 0xA2){
         ok = 1;
     } else {
         ok = 0;
     }
+    
+    // if (*in == 0xA2) {
+        //     asm volatile ("" : "=r"(ok) : "0"(1));
+        // } else {
+            //     asm volatile ("" : "=r"(ok) : "0"(0));
+            // }
+            
     trigger_low();
-    simpleserial_put('r', 1, (uint8_t*)&ok);
+
+    simpleserial_put('r', 1, &ok);
+
     return 0x00;
 }
 
