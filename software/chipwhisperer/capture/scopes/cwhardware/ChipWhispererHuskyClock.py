@@ -6,6 +6,7 @@ from ....logging import *
 import numpy as np
 from .._OpenADCInterface import OpenADCInterface, ClockSettings
 from ..cwhardware.ChipWhispererHuskyMisc import ADS4128Settings
+from typing import Callable
 
 import time
 
@@ -1120,7 +1121,7 @@ class CDCI6214(util.DisableNewAttr):
 
 class ChipWhispererHuskyClock(util.DisableNewAttr):
 
-    def clear_adc_unlock(fn):
+    def clear_adc_unlock(fn: Callable): # type: ignore
         """Use this to decorate methods that can cause the PLL to momentarily unlock. Clears
         the unlock status and then re-enables it. If PLL lock is regained, then the user will
         see the ADC LED turn on for a short time. If the PLL remains unlocked, then the ADC
